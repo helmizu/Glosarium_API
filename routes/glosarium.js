@@ -4,7 +4,7 @@ const { insertData, getData, uploadImage, getDataAll } = require('../libraries/d
 
 router.get('/', function(req, res) {
   getData(
-      req.query.label, 
+      req.query.label, req.query.komponen,
       function(err) {
           res.status(500).json(err)
       },
@@ -16,7 +16,14 @@ router.get('/', function(req, res) {
 
 router.post('/', uploadImage, function(req, res) {
     const data = req.body
-    data.gambarIlustrasi = `http://localhost:7000/images/${req.file.filename}`
+    const msg;
+    if (req.file) {
+        data.gambarIlustrasi = `http://localhost:7000/images/${req.file.filename}`
+        msg = { msg : "data inserted"}
+    } else {
+        data.gambarIlustrasi = '';
+        msg = { msg : "data inserted without image"}
+    }
     insertData(
       data, 
       function(err) {
@@ -24,7 +31,7 @@ router.post('/', uploadImage, function(req, res) {
       },
       function(r) {
           console.log(data)
-          res.status(201).json({ msg : "data inserted" });
+          res.status(201).json(msg);
       }
     )
 })
