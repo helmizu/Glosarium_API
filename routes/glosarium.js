@@ -29,7 +29,7 @@ router.post('/', uploadImage, function(req, res) {
     )
 })
 
-router.get('/collection', function(req, res) {
+router.get('/all', function(req, res) {
     getDataAll( 
       function(err) {
           res.status(500).json(err)

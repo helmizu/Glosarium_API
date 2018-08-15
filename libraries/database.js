@@ -3,10 +3,10 @@ const MongoClient = require('mongodb').MongoClient;
 const multer  = require('multer')
 const path = require('path')
 const storage = multer.diskStorage({
-    destination: './public/images/',
-    filename: function ( req, file, cb ) {
-      cb( null, path.basename(file.originalname, path.extname(file.originalname))+ '-' + Date.now()+ path.extname(file.originalname));
-    }
+  destination: './public/images/',
+  filename: function ( req, file, cb ) {
+    cb( null, path.basename(file.originalname, path.extname(file.originalname))+ '-' + Date.now()+ path.extname(file.originalname));
+  }
 });
 
 const upload = multer({ storage: storage });
@@ -15,10 +15,10 @@ const uploadImage = upload.single('ilustrasi');
 
 function connect() {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-      if (err) return console.log(err)
-      console.log("Connected successfully to server");
-      const db = client.db(dbName);
-      client.close();
+    if (err) return console.log(err)
+    console.log("Connected successfully to server");
+    const db = client.db(dbName);
+    client.close();
   });
 }
 
@@ -56,17 +56,30 @@ function insertData (data, error, callback) {
 }
 
 function getDataAll(error, callback) {
-  const data = []
+  const dataHandler = []
+  const colName = []
+  const dataCb = []
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
     if (err) return error(err);
     const db = client.db(dbName);
     db.listCollections().toArray(function (err, r) {
-      client.close();
       if (err) return error(err);
-      if (r) {
-        r.map(res => data.push(res.name))
+      if (r) r.map(res => colName.push(res.name))
+      if (colName) {
+        colName.map(col => {
+          const collection = db.collection(col);
+          collection.find({}).toArray(function (err, r) {
+            if (err) return error(err);
+            if (r) {
+              dataHandler.push(r);
+              r.map(res => {
+                dataCb.push(res)
+              })
+            }
+            if (dataHandler.length == colName.length) return callback(dataCb)
+          })
+        })
       }
-      return callback(data);
     })
   })
 }
