@@ -8,7 +8,7 @@ url = `http://localhost:7000/glosarium?label=${label}&komponen=${komponen}` --> 
 
 api to get all data<br>
 method = get
-url = `http://localhost:7000/glosarium/all` --> for detail komponen
+url = `http://localhost:7000/glosarium/all` --> for dashboard
 
 api to insert data<br>
 method = post
