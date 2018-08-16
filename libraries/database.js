@@ -26,7 +26,7 @@ function getData(label, search = '', error, callback) {
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
     if (err) return error(err);
     if (label == null || label == '' || typeof label == undefined) return error({ msg : "label required" })
-    const filter = {};
+    var filter = {};
     if (search != '') {
       filter = {"nama": { $regex : search }}
     } else {
@@ -61,10 +61,16 @@ function insertData (data, error, callback) {
   }); 
 }
 
-function getDataAll(error, callback) {
+function getDataAll(search, error, callback) {
   const dataHandler = []
   const colName = []
   const dataCb = []
+  var filter = {};
+  if (search != '') {
+    filter = {"nama": { $regex : search }}
+  } else {
+    filter = {}
+  }
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
     if (err) return error(err);
     const db = client.db(dbName);
@@ -74,7 +80,7 @@ function getDataAll(error, callback) {
       if (colName) {
         colName.map(col => {
           const collection = db.collection(col);
-          collection.find({}).toArray(function (err, r) {
+          collection.find(filter).toArray(function (err, r) {
             if (err) return error(err);
             if (r) {
               dataHandler.push(r);

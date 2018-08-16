@@ -3,14 +3,14 @@ var router = express.Router();
 const { insertData, getData, uploadImage, getDataAll } = require('../libraries/database');
 
 router.get('/', function(req, res) {
-  getData(
-      req.query.label, req.query.komponen,
-      function(err) {
-          res.status(500).json(err)
-      },
-      function(r) {
-          res.status(200).json(r);
-      }
+    getData(
+        req.query.label, req.query.komponen,
+        function(err) {
+            res.status(500).json(err)
+        },
+        function(r) {
+            res.status(200).json(r);
+        }
     )
 });
 
@@ -24,25 +24,27 @@ router.post('/', uploadImage, function(req, res) {
         msg = 'Data Inserted without Image'
     }
     insertData(
-      data, 
-      function(err) {
-          res.status(500).json(err)
-      },
-      function(r) {
-          console.log(data)
-          res.status(201).json({ msg : msg });
-      }
+        data, 
+        function(err) {
+            res.status(500).json(err)
+        },
+        function(r) {
+            console.log(data)
+            res.status(201).json({ msg : msg });
+        }
     )
 })
 
 router.get('/all', function(req, res) {
-    getDataAll( 
-      function(err) {
-          res.status(500).json(err)
-      },
-      function(r) {
-          res.status(200).json(r);
-      }
+    const search = req.query.search || ""
+    getDataAll(
+        search, 
+        function(err) {
+            res.status(500).json(err)
+        },
+        function(r) {
+            res.status(200).json(r);
+        }
     )
 })
 
