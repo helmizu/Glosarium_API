@@ -9,7 +9,8 @@ var usersRouter = require('./routes/users');
 var GlosaRouter = require('./routes/glosarium');
 
 var app = express();
-var db = require('./libraries/database').connect();
+// Cek connect
+require('./libraries/database').connect();
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -16,13 +16,12 @@ router.get('/', function(req, res) {
 
 router.post('/', uploadImage, function(req, res) {
     const data = req.body
-    const msg = '';
-    if (req.file) {
-        data.gambarIlustrasi = `http://localhost:7000/images/${req.file.filename}`
-        msg = { msg : "data inserted"}
+    var msg = '';
+    if(req.file) {
+        data.ilustrasi = `http://localhost:7000/images/${req.file.filename}`
+        msg = 'Data Inserted with Image'
     } else {
-        data.gambarIlustrasi = '';
-        msg = { msg : "data inserted without image"}
+        msg = 'Data Inserted without Image'
     }
     insertData(
       data, 
@@ -31,7 +30,7 @@ router.post('/', uploadImage, function(req, res) {
       },
       function(r) {
           console.log(data)
-          res.status(201).json(msg);
+          res.status(201).json({ msg : msg });
       }
     )
 })
