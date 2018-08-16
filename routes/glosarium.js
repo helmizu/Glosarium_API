@@ -16,7 +16,7 @@ router.get('/', function(req, res) {
 
 router.post('/', uploadImage, function(req, res) {
     const data = req.body
-    const msg;
+    const msg = '';
     if (req.file) {
         data.gambarIlustrasi = `http://localhost:7000/images/${req.file.filename}`
         msg = { msg : "data inserted"}

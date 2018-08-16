@@ -26,7 +26,7 @@ function getData(label, search = '', error, callback) {
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
     if (err) return error(err);
     if (label == null || label == '' || typeof label == undefined) return error({ msg : "label required" })
-    const filter;
+    const filter = {};
     if (search != '') {
       filter = {"nama": { $regex : search }}
     } else {
@@ -89,23 +89,5 @@ function getDataAll(error, callback) {
     })
   })
 }
-
-router.get('/sent', (req, res, next) => {
-  let page = parseInt(req.query.page) || 1
-  let perPage = parseInt(req.query.per_page) || 10
-  let search = req.query.search || ''
-  var filter
-
-  
-
-  mongodb.connect(url, (err, client) => {
-    if (err) throw err
-    const db = client.db(dbName)
-
-    db.collection('sent').find(filter).skip((page - 1) * perPage).limit(perPage).toArray().then(result => {
-      res.send(result)
-    }).catch(err => res.send(err))
-  })
-})
 
 module.exports = { connect, insertData, getData, uploadImage, getDataAll }
