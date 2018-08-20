@@ -1,15 +1,23 @@
-var express = require('express');
-var router = express.Router();
-const { insertData, getData, uploadImage, getDataAll } = require('../libraries/database');
+const express = require('express');
+const router = express.Router();
+const { 
+    insertData, 
+    getData, 
+    uploadImage, 
+    getDataAll, 
+    getCollection, 
+    updateData, 
+    deleteData 
+} = require('../libraries/database');
 
 router.get('/', function(req, res) {
     getData(
         req.query.label, req.query.komponen,
         function(err) {
-            res.status(500).json(err)
+            return res.status(500).json(err)
         },
         function(r) {
-            res.status(200).json(r);
+            return res.status(200).json(r);
         }
     )
 });
@@ -26,11 +34,11 @@ router.post('/', uploadImage, function(req, res) {
     insertData(
         data, 
         function(err) {
-            res.status(500).json(err)
+            return res.status(500).json(err)
         },
         function(r) {
             console.log(data)
-            res.status(201).json({ msg : msg });
+            return res.status(201).json({ msg : msg });
         }
     )
 })
@@ -40,12 +48,36 @@ router.get('/all', function(req, res) {
     getDataAll(
         search, 
         function(err) {
-            res.status(500).json(err)
+            return res.status(500).json(err)
         },
         function(r) {
-            res.status(200).json(r);
+            return res.status(200).json(r);
         }
     )
+})
+
+router.get('/collection', function(req, res) {
+    getCollection(function(err, result) {
+        if (err) return res.status(500).json(err)
+        return res.json(result)
+    })
+})
+
+router.put('/', function(req, res) {
+    console.log(req.body)
+    const id = req.query.id
+    updateData(id, req.body, function(err, result) {
+        if (err) return res.status(500).json(err)
+        return res.json(result)
+    })
+})
+
+router.delete('/', function(req, res) {
+    const { label, id } = req.query
+    deleteData({ label, id }, function(err, result) {
+        if (err) return res.status(500).json(err)
+        return res.json(result)
+    })
 })
 
 module.exports = router;

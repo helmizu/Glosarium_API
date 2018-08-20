@@ -15,3 +15,15 @@ method = post
 url = `http://localhost:7000/glosarium/`
 
 <b> data = { nama : padding, pengertian : ...., ilustrasi : image, penggunaan : ...., label: CSS/HTML/PHP, tags : [CSS/HTML/PHP, Arkademy, dll] } </b>
+
+api to get collection list<br>
+method = get
+url = `http://localhost:7000/glosarium/collection`
+
+api to edit data<br>
+method = put
+url = `http://localhost:7000/glosarium?id=${id}`
+
+api to delete data<br>
+method = delete
+url = `http://localhost:7000/glosarium?label=${label}&id=${id}`
