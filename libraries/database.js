@@ -37,7 +37,7 @@ function getData(label, search = '', error, callback) {
     const collectionName = label;
     const collection = db.collection(collectionName);
     // Read documents
-    collection.find(filter).toArray(function (err, r) {
+    collection.find(filter).sort({nama : 1}).toArray(function (err, r) {
       client.close();
       if (err) return error(err);
       return callback(r);

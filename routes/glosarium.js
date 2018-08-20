@@ -37,7 +37,6 @@ router.post('/', uploadImage, function(req, res) {
             return res.status(500).json(err)
         },
         function(r) {
-            console.log(data)
             return res.status(201).json({ msg : msg });
         }
     )
@@ -63,10 +62,15 @@ router.get('/collection', function(req, res) {
     })
 })
 
-router.put('/', function(req, res) {
-    console.log(req.body)
+router.put('/', uploadImage, function(req, res) {
+    var data = req.body
     const id = req.query.id
-    updateData(id, req.body, function(err, result) {
+    if(req.file) {
+        data.ilustrasi = `http://localhost:7000/images/${req.file.filename}`
+    } else {
+
+    }
+    updateData(id, data, function(err, result) {
         if (err) return res.status(500).json(err)
         return res.json(result)
     })
