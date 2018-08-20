@@ -1,6 +1,7 @@
 const { url, dbName } = require('../config');
 const MongoClient = require('mongodb').MongoClient;
 const OID = require('mongodb').ObjectId;
+// const fs = require('fs')
 const multer  = require('multer')
 const path = require('path')
 const storage = multer.diskStorage({
@@ -146,6 +147,7 @@ function deleteData(data, cb) {
     collection.findOneAndDelete({_id:ObID}, function(err, r) {
       client.close();
       if (err) return cb(err, null);
+      // fs.unlinkSync(r.value.ilustrasi) masi error
       return cb(null, r);
     })
   })
