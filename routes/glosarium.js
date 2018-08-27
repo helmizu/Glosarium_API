@@ -13,11 +13,9 @@ const {
 router.get('/', function(req, res) {
     getData(
         req.query.label, req.query.komponen,
-        function(err) {
-            return res.status(500).json(err)
-        },
-        function(r) {
-            return res.status(200).json(r);
+        function(err, result) {
+            if (err) return res.status(500).json(err)
+            return res.status(200).json(result);
         }
     )
 });
@@ -33,10 +31,8 @@ router.post('/', uploadImage, function(req, res) {
     }
     insertData(
         data, 
-        function(err) {
-            return res.status(500).json(err)
-        },
-        function(r) {
+        function(err, result) {
+            if (err) return res.status(500).json(err)
             return res.status(201).json({ msg : msg });
         }
     )
@@ -46,11 +42,9 @@ router.get('/all', function(req, res) {
     const search = req.query.search || ""
     getDataAll(
         search, 
-        function(err) {
-            return res.status(500).json(err)
-        },
-        function(r) {
-            return res.status(200).json(r);
+        function(err, result) {
+            if (err) return res.status(500).json(err)
+            return res.status(200).json(result);
         }
     )
 })

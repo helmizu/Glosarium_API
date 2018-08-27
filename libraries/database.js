@@ -24,10 +24,10 @@ function connect() {
   });
 }
 
-function getData(label, search = '', error, callback) {
+function getData(label, search = '', cb) {
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
-    if (err) return error(err);
-    if (label == null || label == '' || typeof label == undefined) return error({ msg : "label required" })
+    if (err) return cb(err, null);
+    if (label == null || label == '' || typeof label == undefined) return cb({ msg : "label required" }, null)
     var filter = {};
     if (search != '') {
       filter = {"nama": { $regex : search }}
@@ -40,30 +40,30 @@ function getData(label, search = '', error, callback) {
     // Read documents
     collection.find(filter).sort({nama : 1}).toArray(function (err, r) {
       client.close();
-      if (err) return error(err);
-      return callback(r);
+      if (err) return cb(err, null);
+      return cb(null, r);
     })
   })
 }
 
 // data = { nama : padding, pengertian : ...., gambarIlustrasi : url, penggunaan : ...., label: CSS/HTML/PHP, tags : [CSS/HTML/PHP, Arkademy, dll] }
-function insertData (data, error, callback) {
+function insertData (data, cb) {
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
-    if (err) return error(err);
-    if (data.label == null || data.label == '' || typeof data.label == undefined) return error({ msg : "label required" })
+    if (err) return cb(err, null);
+    if (data.label == null || data.label == '' || typeof data.label == undefined) return cb({ msg : "label required" }, null)
     const db = client.db(dbName);
     const collectionName = data.label;
     const collection = db.collection(collectionName);
     // Insert one documents
     collection.insertOne(data, function(err, r) {
       client.close();
-      if (err) return error(err);
-      return callback(r);
+      if (err) return cb(err, null);
+      return cb(null, r);
     });
   }); 
 }
 
-function getDataAll(search, error, callback) {
+function getDataAll(search, cb) {
   const dataHandler = []
   const colName = []
   const dataCb = []
@@ -74,24 +74,24 @@ function getDataAll(search, error, callback) {
     filter = {}
   }
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
-    if (err) return error(err);
+    if (err) return cb(err, null);
     const db = client.db(dbName);
     db.listCollections().toArray(function (err, r) {
-      if (err) return error(err);
+      if (err) return cb(err, null);
       if (r) r.map(res => colName.push(res.name))
       if (colName) {
         colName.map(col => {
           const collection = db.collection(col);
           collection.find(filter).toArray(function (err, r) {
             client.close();
-            if (err) return error(err);
+            if (err) return cb(err, null);
             if (r) {
               dataHandler.push(r);
               r.map(res => {
                 dataCb.push(res)
               })
             }
-            if (dataHandler.length == colName.length) return callback(dataCb)
+            if (dataHandler.length == colName.length) return cb(null, dataCb)
           })
         })
       }
@@ -101,11 +101,11 @@ function getDataAll(search, error, callback) {
 
 function getCollection(cb) {
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
-    if (err) return error(err);
+    if (err) return cb(err, null);
     const db = client.db(dbName);
     db.listCollections().toArray(function (err, r) {
       client.close();
-      if (err) return error(err, null);
+      if (err) return cb(err, null);
       if (r) return cb(null, r);
     })
   })
@@ -147,7 +147,6 @@ function deleteData(data, cb) {
     collection.findOneAndDelete({_id:ObID}, function(err, r) {
       client.close();
       if (err) return cb(err, null);
-      // fs.unlinkSync(r.value.ilustrasi) masi error
       return cb(null, r);
     })
   })
