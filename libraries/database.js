@@ -17,8 +17,8 @@ const uploadImage = upload.single('ilustrasi');
 
 function connect() {
   MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-    client.close();
     if (err) return console.log(err)
+    client.close();
     console.log("Connected successfully to server");
     const db = client.db(dbName);
   });
@@ -87,8 +87,10 @@ function getDataAll(search, cb) {
             if (err) return cb(err, null);
             if (r) {
               dataHandler.push(r);
-              r.map(res => {
-                dataCb.push(res)
+              r.map(result => {
+                if(result.label) {
+                  dataCb.push(result)
+                }
               })
             }
             if (dataHandler.length == colName.length) return cb(null, dataCb)
