@@ -24,7 +24,7 @@ router.post('/', uploadImage, function(req, res) {
     const data = req.body
     var msg = '';
     if(req.file) {
-        data.ilustrasi = `http://localhost:7000/images/${req.file.filename}`
+        data.ilustrasi = req.file.filename
         msg = 'Data Inserted with Image'
     } else {
         msg = 'Data Inserted without Image'
@@ -60,7 +60,7 @@ router.put('/', uploadImage, function(req, res) {
     var data = req.body
     const id = req.query.id
     if(req.file) {
-        data.ilustrasi = `http://localhost:7000/images/${req.file.filename}`
+        data.ilustrasi = req.file.filename
     } else {
 
     }

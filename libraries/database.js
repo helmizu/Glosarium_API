@@ -78,24 +78,28 @@ function getDataAll(search, cb) {
     const db = client.db(dbName);
     db.listCollections().toArray(function (err, r) {
       if (err) return cb(err, null);
-      if (r) r.map(res => colName.push(res.name))
-      if (colName) {
-        colName.map(col => {
-          const collection = db.collection(col);
-          collection.find(filter).toArray(function (err, r) {
-            client.close();
-            if (err) return cb(err, null);
-            if (r) {
-              dataHandler.push(r);
-              r.map(result => {
-                if(result.label) {
-                  dataCb.push(result)
-                }
-              })
-            }
-            if (dataHandler.length == colName.length) return cb(null, dataCb)
+      if (r  > 0) { 
+        r.map(res => colName.push(res.name))
+        if (colName) {
+          colName.map(col => {
+            const collection = db.collection(col);
+            collection.find(filter).toArray(function (err, r) {
+              client.close();
+              if (err) return cb(err, null);
+              if (r) {
+                dataHandler.push(r);
+                r.map(result => {
+                  if(result.label) {
+                    dataCb.push(result)
+                  }
+                })
+              }
+              if (dataHandler.length == colName.length) return cb(null, dataCb)
+            })
           })
-        })
+        }
+      } else {
+        return cb(null, r)
       }
     })
   })
