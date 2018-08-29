@@ -24,7 +24,11 @@ app.all('/*', (req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE')
   next()
 })
-
+app.use(function(req,res,next){
+  console.log(process.env)
+  console.log(require('./config/index').url)
+  next();
+})
 app.use('/user', UserRouter);
 app.use('/glosarium', GlosaRouter);
 
