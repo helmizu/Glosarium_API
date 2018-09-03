@@ -93,7 +93,7 @@ function getDataAll(search, cb) {
           if (dataHandler.length == result.length) return cb(null, dataCb)
         })
       } else {
-        return cb(null, r)
+        return cb(null, result)
       }
     })
   })
