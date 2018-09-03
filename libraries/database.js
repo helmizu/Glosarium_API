@@ -78,7 +78,7 @@ function getDataAll(search, cb) {
     const db = client.db(dbName);
     db.listCollections().toArray(function (err, result) {
       if (err) return cb(err, null);
-      if (result  > 0) { 
+      if (result.length > 0) { 
         result.map(res => {
           const collection = db.collection(res.name)
           collection.find(filter).toArray(function (err, dataArray) {
