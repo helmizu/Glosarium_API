@@ -25,8 +25,8 @@ app.all('/*', (req, res, next) => {
   next()
 })
 app.use(function(req,res,next){
-  console.log(process.env)
-  console.log(require('./config/index').url)
+  // console.log(process.env)
+  // console.log(require('./config/index').url)
   next();
 })
 app.use('/user', UserRouter);
