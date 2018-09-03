@@ -76,24 +76,26 @@ function getDataAll(search, cb) {
   MongoClient.connect(url, {useNewUrlParser:true}, function(err, client) {
     if (err) return cb(err, null);
     const db = client.db(dbName);
-    db.listCollections().toArray(function (err, result) {
+    db.listCollections().toArray(function (err, r) {
       if (err) return cb(err, null);
-      if (result.length > 0) { 
-        result.map(res => {
-          const collection = db.collection(res.name)
-          collection.find(filter).toArray(function (err, dataArray) {
-            if (err) return cb(err, null)
-            dataHandler.push(dataArray)
-            dataArray.map(data => {
-              if(data.label) {
-                dataCb.push(data)
-              }
-            })
+      if (r) r.map(res => colName.push(res.name))
+      if (colName.length > 0) {
+        colName.map(col => {
+          const collection = db.collection(col);
+          collection.find(filter).toArray(function (err, r) {
+            client.close();
+            if (err) return cb(err, null);
+            if (r) {
+              dataHandler.push(r);
+              r.map(res => {
+                dataCb.push(res)
+              })
+            }
+            if (dataHandler.length == colName.length) return cb(null, dataCb)
           })
-          if (dataHandler.length == result.length) return cb(null, dataCb)
         })
       } else {
-        return cb(null, result)
+        return cb(null, r)
       }
     })
   })
